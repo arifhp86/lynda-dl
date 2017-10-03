@@ -26,6 +26,7 @@ class LyndaCurl
 	public function downloadVideo($videoLink, $name, $index, $referrer, $courseName)
 	{
 		$courseName = str_replace(':', ' -', $courseName->name);
+		$name = str_replace([':', '/'], '-', $name);
 		$folder = "download/{$courseName}";
 		if(!is_dir($folder))
 			mkdir($folder);

@@ -23,11 +23,11 @@ class FileDB
 	 * @param  string $name
 	 * @return string
 	 */
-	public function saveCourseName($name)
+	public function saveCourseName($name, $courseId)
 	{
 		$filePath = self::STORAGE_FOLDER . self::COURSE_FILE_NAME;
 		$id = uniqid('ly_');
-		$this->courses[] = (object)compact('id', 'name');
+		$this->courses[] = (object)compact('id', 'name', 'courseId');
 		file_put_contents($filePath, json_encode($this->courses));
 		return $id;
 	}
@@ -87,7 +87,7 @@ class FileDB
 	public function deleteCourse($id)
 	{
 		$index = $this->getCourseIndex($id);
-		if($index == null) 
+		if($index === null) 
 			return;
 
 		array_splice($this->courses, $index, 1);

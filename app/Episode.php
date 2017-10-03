@@ -13,23 +13,23 @@ class Episode
 		$this->db = $db;
 	}
 
-	public function getEpisodeUrl($courseId, $epId)
+	public function getEpisode($courseId, $epId)
 	{
 		return $this->db->getSingleEpisode($courseId, $epId);
 	}
 
 	public function getDownloadLink($url)
 	{
-		$content = $this->curl->retriveContent($url);
-		preg_match('/<div id="courseplayer"[\s\S]+?data-src="(.+?)"/', $content, $matches);
-		return $matches[1];
+		$content = json_decode($this->curl->retriveContent($url));
+		// var_dump($url);die;
+		return $content[0]->urls->{'540'};
 	}
 
 	public function downloadVideo($courseId, $epId)
 	{
 		$courseName = $this->db->getCourseName($courseId);
-		$episode = $this->getEpisodeUrl($courseId, $epId);
-		$downloadLink = $this->getDownloadLink($episode->url);
+		$episode = $this->getEpisode($courseId, $epId);
+		$downloadLink = $this->getDownloadLink("https://www.lynda.com/ajax/course/{$episode->courseId}/{$episode->id}/play");
 		$this->curl->downloadVideo($downloadLink, $episode->name, $epId, $episode->url, $courseName);
 	}
 }
